@@ -46,6 +46,7 @@
             font-size: 22px;
             margin-bottom: 30px;
             line-height: 1.4;
+            text-align: center;
         }
         .options {
             display: flex;
@@ -137,6 +138,27 @@
             color: #58cc02;
             margin-bottom: 30px;
         }
+        /* Стили для портретов */
+        .question-header {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .portrait {
+            width: 140px;
+            height: 140px;
+            border-radius: 24px;
+            object-fit: cover;
+            border: 4px solid #e5e5e5;
+            margin-bottom: 15px;
+        }
+        .person-years {
+            font-size: 18px;
+            color: #777;
+            font-weight: bold;
+            margin-bottom: 25px;
+        }
     </style>
 </head>
 <body>
@@ -149,7 +171,7 @@
     </div>
 
     <div id="quiz-screen">
-        <h2 id="question-text">Вопрос</h2>
+        <div class="question-header" id="question-header"></div>
         <div class="options" id="options-container"></div>
     </div>
 
@@ -206,7 +228,44 @@
         {"date": "1941-1945", "event": "Великая Отечественная война"},
         {"date": "1961", "event": "полет Юрия Гагарина в космос"},
         {"date": "1991", "event": "денонсация договора о создании СССР"},
-        {"date": "1993", "event": "принятие конституции Российской Федерации"}
+        {"date": "1993", "event": "принятие конституции Российской Федерации"},
+        
+        // Личности 
+{"name": "Иван III Васильевич Рюрикович", "years": "1462-1505", "image": "images/image1.jpg"},
+        {"name": "Василий III Иванович Рюрикович", "years": "1505-1533", "image": "images/image2.jpg"},
+        {"name": "Иван IV Васильевич Рюрикович", "years": "1533-1584", "image": "images/image3.jpg"},
+        {"name": "Фёдор Иванович Рюрикович", "years": "1584-1598", "image": "images/image4.jpg"},
+        {"name": "Борис Фёдорович Годунов", "years": "1598-1605", "image": "images/image5.jpg"},
+        {"name": "Лжедмитрий I (настоящая личность – Григорий Отрепьев)", "years": "1605-1606", "image": "images/image6.jpg"},
+        {"name": "Василий IV Иванович Шуйский", "years": "1606-1610", "image": "images/image7.jpg"},
+        {"name": "Михаил Фёдорович Романов", "years": "1613-1645", "image": "images/image8.jpg"},
+        {"name": "Алексей Михайлович Романов", "years": "1645-1676", "image": "images/image9.jpg"},
+        {"name": "Фёдор III Алексеевич Романов", "years": "1676-1682", "image": "images/image10.jpg"},
+        {"name": "Иван V Алексеевич Романов", "years": "1682-1696", "image": "images/image11.jpg"},
+        {"name": "Пётр I Алексеевич Романов", "years": "1682-1725", "image": "images/image12.jpg"},
+        {"name": "Екатерина I Алексеевна Михайлова (настоящее имя – Марта Самуиловна Скавронская)", "years": "1725-1727", "image": "images/image13.jpg"},
+        {"name": "Пётр II Алексеевич Романов", "years": "1727-1730", "image": "images/image14.jpg"},
+        {"name": "Анна Иоанновна Романова", "years": "1730-1740", "image": "images/image15.jpg"},
+        {"name": "Иван VI Антонович", "years": "1740-1741", "image": "images/image16.jpg"},
+        {"name": "Елизавета Петровна Романова", "years": "1741-1761", "image": "images/image17.jpg"},
+        {"name": "Пётр III Фёдорович (настоящее имя – Карл Пётр Ульрих Гольштейн Готторпский)", "years": "1761-1762", "image": "images/image18.jpg"},
+        {"name": "Екатерина II Алексеевна Романова (настоящее имя – София Августа Фредерика Ангальт-Цербстская)", "years": "1762-1796", "image": "images/image19.jpg"},
+        {"name": "Павел I Петрович Романов", "years": "1796-1801", "image": "images/image20.jpg"},
+        {"name": "Александр I Павлович Романов", "years": "1801-1825", "image": "images/image21.jpg"},
+        {"name": "Николай I Павлович Романов", "years": "1825-1855", "image": "images/image22.jpg"},
+        {"name": "Александр II Николаевич Романов", "years": "1855-1881", "image": "images/image23.jpg"},
+        {"name": "Александр III Александрович Романов", "years": "1881-1894", "image": "images/image24.jpg"},
+        {"name": "Николай II Александрович Романов", "years": "1894-1917", "image": "images/image25.jpg"},
+        {"name": "Владимир Ильич Ленин (настоящая фамилия – Ульянов)", "years": "1917-1924", "image": "images/image26.jpg"},
+        {"name": "Иосиф Виссарионович Сталин (настоящая фамилия – Джугашвили)", "years": "1929-1953", "image": "images/image27.jpg"},
+        {"name": "Никита Сергеевич Хрущёв", "years": "1957-1964", "image": "images/image28.jpg"},
+        {"name": "Леонид Ильич Брежнев", "years": "1964-1982", "image": "images/image29.jpg"},
+        {"name": "Юрий Владимирович Андропов", "years": "1982-1984", "image": "images/image30.jpg"},
+        {"name": "Константин Устинович Черненко", "years": "1984-1985", "image": "images/image31.jpg"},
+        {"name": "Михаил Сергеевич Горбачёв", "years": "1985-1991", "image": "images/image32.jpg"},
+        {"name": "Борис Николаевич Ельцин", "years": "1991-1999", "image": "images/image33.jpg"},
+        {"name": "Путин Владимир Владимирович", "years": "2000-2008, 2012 – по сей день", "image": "images/image34.jpg"},
+        {"name": "Дмитрий Анатольевич Медведев", "years": "2008-2012", "image": "images/image35.jpg"}
     ];
 
     const totalQuestions = 5;
@@ -214,8 +273,9 @@
     let currentIndex = 0;
     let score = 0;
     let selectedOptionDiv = null;
+    let currentCorrectAnswer = '';
 
-    const questionText = document.getElementById('question-text');
+    const questionHeader = document.getElementById('question-header');
     const optionsContainer = document.getElementById('options-container');
     const actionBtn = document.getElementById('action-btn');
     const progressBar = document.getElementById('progress-bar');
@@ -243,24 +303,42 @@
 
     function loadQuestion() {
         const currentItem = quizData[currentIndex];
-        questionText.textContent = currentItem.event;
         optionsContainer.innerHTML = '';
         selectedOptionDiv = null;
         actionBtn.disabled = true;
         actionBtn.textContent = 'Проверить';
         actionBtn.classList.remove('continue');
 
-        let wrongAnswers = allData
-            .map(d => d.date)
-            .filter(d => d !== currentItem.date);
-        wrongAnswers = shuffle(wrongAnswers).slice(0, 3);
+        let optionsList = [];
 
-        const options = shuffle([currentItem.date, ...wrongAnswers]);
+        if (currentItem.event) {
+            questionHeader.innerHTML = `<h2>${currentItem.event}</h2>`;
+            currentCorrectAnswer = currentItem.date;
+            
+            let wrongAnswers = allData
+                .filter(d => d.event && d.date !== currentItem.date)
+                .map(d => d.date);
+            wrongAnswers = shuffle(wrongAnswers).slice(0, 3);
+            optionsList = shuffle([currentCorrectAnswer, ...wrongAnswers]);
+        } else {
+            questionHeader.innerHTML = `
+                <img src="${currentItem.image}" alt="Портрет" class="portrait">
+                <h2 style="margin-bottom: 5px;">Кто на портрете?</h2>
+                <div class="person-years">${currentItem.years}</div>
+            `;
+            currentCorrectAnswer = currentItem.name;
 
-        options.forEach(dateText => {
+            let wrongAnswers = allData
+                .filter(d => d.name && d.name !== currentItem.name)
+                .map(d => d.name);
+            wrongAnswers = shuffle(wrongAnswers).slice(0, 3);
+            optionsList = shuffle([currentCorrectAnswer, ...wrongAnswers]);
+        }
+
+        optionsList.forEach(text => {
             const div = document.createElement('div');
             div.className = 'option';
-            div.textContent = dateText;
+            div.textContent = text;
             div.onclick = () => selectOption(div);
             optionsContainer.appendChild(div);
         });
@@ -292,19 +370,16 @@
             return;
         }
 
-        const currentItem = quizData[currentIndex];
-        const correctDate = currentItem.date;
-
         document.querySelectorAll('.option').forEach(div => {
-            if (div.textContent === correctDate) {
+            if (div.textContent === currentCorrectAnswer) {
                 div.classList.add('correct');
             }
-            if (div.classList.contains('selected') && div.textContent !== correctDate) {
+            if (div.classList.contains('selected') && div.textContent !== currentCorrectAnswer) {
                 div.classList.add('wrong');
             }
         });
 
-        if (selectedOptionDiv && selectedOptionDiv.textContent === correctDate) {
+        if (selectedOptionDiv && selectedOptionDiv.textContent === currentCorrectAnswer) {
             score++;
         }
 
