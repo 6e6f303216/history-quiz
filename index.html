@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Исторический квиз</title>
+    <style>
+        body {
+            font-family: 'Nunito', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #ffffff;
+            display: flex;
+            justify-content: center;
+            height: 100vh;
+            color: #3c3c3c;
+        }
+        .app-container {
+            width: 100%;
+            max-width: 600px;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        .progress-bar-container {
+            flex-grow: 1;
+            background-color: #e5e5e5;
+            border-radius: 10px;
+            height: 16px;
+            overflow: hidden;
+        }
+        .progress-bar {
+            background-color: #58cc02;
+            height: 100%;
+            width: 0%;
+            border-radius: 10px;
+            transition: width 0.4s ease;
+        }
+        h2 {
+            font-size: 22px;
+            margin-bottom: 30px;
+            line-height: 1.4;
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            flex-grow: 1;
+        }
+        .option {
+            border: 2px solid #e5e5e5;
+            border-bottom-width: 4px;
+            border-radius: 16px;
+            padding: 18px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.1s ease;
+            user-select: none;
+        }
+        .option:active {
+            border-bottom-width: 2px;
+            transform: translateY(2px);
+        }
+        .option.selected {
+            border-color: #84d8ff;
+            background-color: #ddf4ff;
+            color: #1cb0f6;
+        }
+        .option.correct {
+            border-color: #58cc02;
+            background-color: #d7ffb8;
+            color: #58a700;
+        }
+        .option.wrong {
+            border-color: #ea2b2b;
+            background-color: #ffdfe0;
+            color: #ea2b2b;
+        }
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #e5e5e5;
+        }
+        .btn {
+            width: 100%;
+            background-color: #58cc02;
+            color: white;
+            border: none;
+            border-bottom: 4px solid #58a700;
+            border-radius: 16px;
+            padding: 16px;
+            font-size: 18px;
+            font-weight: bold;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.1s ease;
+        }
+        .btn:active:disabled {
+            transform: none;
+            border-bottom-width: 0px;
+        }
+        .btn:active:enabled {
+            border-bottom-width: 0px;
+            transform: translateY(4px);
+        }
+        .btn:disabled {
+            background-color: #e5e5e5;
+            color: #afafaf;
+            border-bottom-color: #cecece;
+            cursor: default;
+        }
+        .btn.continue {
+            background-color: #1cb0f6;
+            border-bottom-color: #1899d6;
+        }
+        .hidden {
+            display: none !important;
+        }
+        #result-screen {
+            text-align: center;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .score-text {
+            font-size: 24px;
+            font-weight: bold;
+            color: #58cc02;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <div class="header" id="header">
+        <div class="progress-bar-container">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
+    </div>
+
+    <div id="quiz-screen">
+        <h2 id="question-text">Вопрос</h2>
+        <div class="options" id="options-container"></div>
+    </div>
+
+    <div id="result-screen" class="hidden">
+        <h2>Урок завершён!</h2>
+        <div class="score-text" id="score-text"></div>
+    </div>
+
+    <div class="footer">
+        <button class="btn" id="action-btn" disabled>Проверить</button>
+    </div>
+</div>
+
+<script>
+    const allData = [
+        {"date": "882", "event": "объединение Новгорода и Киева Олегом Вещим, создание Древнерусского государства"},
+        {"date": "988", "event": "крещение Руси киевским князем Владимиром Святославичем"},
+        {"date": "1097", "event": "Любечский съезд русских князей, принятие принципа «Да каждый держит отчину свою»"},
+        {"date": "1113", "event": "написание «Повести временных лет» – первой русской летописи"},
+        {"date": "1185", "event": "написание эпической поэмы «Слово о полку Игореве»"},
+        {"date": "1223", "event": "битва на реке Калке, первое столкновение русских войск с монголами"},
+        {"date": "1238", "event": "битва на реке Сить, гибель владимиро-суздальского князя Юрия Всеволодовича, кульминация похода Батыя на Русь"},
+        {"date": "1240", "event": "Невская битва"},
+        {"date": "1242", "event": "сражение на Чудском озере"},
+        {"date": "1380", "event": "Куликовская битва, первая попытка освободиться от владычества Орды"},
+        {"date": "1480", "event": "стояние на реке Угре, освобождение России от монгольского Ига"},
+        {"date": "1523", "event": "завершение объединения русских земель вокруг Москвы"},
+        {"date": "1547", "event": "принятие Иваном IV титула царя"},
+        {"date": "1552", "event": "присоединение Казани"},
+        {"date": "1556", "event": "присоединение Астрахани"},
+        {"date": "1565-1572", "event": "Опричнина, разделение страны на земщину и опричнину для укрепления царской власти"},
+        {"date": "1581-1586", "event": "поход отряда Ермака в Сибирь, присоединение Сибири к России"},
+        {"date": "1598-1613", "event": "Смутное время"},
+        {"date": "1612", "event": "освобождение Москвы от поляков вторым ополчением Кузьмы Минина и Дмитрия Пожарского"},
+        {"date": "1613", "event": "начало правления царей из династии Романовых"},
+        {"date": "1670-1671", "event": "восстание Степана Разина"},
+        {"date": "1682-1725", "event": "правление Петра I"},
+        {"date": "1700-1721", "event": "Северная война России с Швецией"},
+        {"date": "1703", "event": "основание Санкт-Петербурга – новой столицы России"},
+        {"date": "1709", "event": "битва под Полтавой, победа Петра I над шведским королем, перелом в Северной войне"},
+        {"date": "1711", "event": "создание Сената – временного органа высшей власти на случай отсутствия царя"},
+        {"date": "1721", "event": "Петр I принимает титул императора"},
+        {"date": "1725-1762", "event": "эпоха Дворцовых переворотов, отсутствие крепкой императорской власти"},
+        {"date": "1755", "event": "открытие первого в истории России университета в Москве"},
+        {"date": "1773-1775", "event": "восстание Емельяна Пугачёва"},
+        {"date": "1812", "event": "Отечественная война, нападение войск Наполеона на Россию"},
+        {"date": "1861", "event": "отмена крепостного права манифестом Александра II"},
+        {"date": "1867", "event": "продажа Аляски"},
+        {"date": "1905-1907", "event": "первая русская революция"},
+        {"date": "1914-1918", "event": "Первая мировая война"},
+        {"date": "1917", "event": "Февральская и Октябрьская революции, приход к власти большевиков"},
+        {"date": "1918-1921", "event": "Гражданская война в России"},
+        {"date": "1922", "event": "образование Союза Советских Социалистических Республик"},
+        {"date": "1941-1945", "event": "Великая Отечественная война"},
+        {"date": "1961", "event": "полет Юрия Гагарина в космос"},
+        {"date": "1991", "event": "денонсация договора о создании СССР"},
+        {"date": "1993", "event": "принятие конституции Российской Федерации"}
+    ];
+
+    const totalQuestions = 5;
+    let quizData = [];
+    let currentIndex = 0;
+    let score = 0;
+    let selectedOptionDiv = null;
+
+    const questionText = document.getElementById('question-text');
+    const optionsContainer = document.getElementById('options-container');
+    const actionBtn = document.getElementById('action-btn');
+    const progressBar = document.getElementById('progress-bar');
+    const quizScreen = document.getElementById('quiz-screen');
+    const resultScreen = document.getElementById('result-screen');
+    const scoreText = document.getElementById('score-text');
+    const header = document.getElementById('header');
+
+    function shuffle(array) {
+        return array.sort(() => Math.random() - 0.5);
+    }
+
+    function startGame() {
+        quizData = shuffle([...allData]).slice(0, totalQuestions);
+        currentIndex = 0;
+        score = 0;
+        quizScreen.classList.remove('hidden');
+        resultScreen.classList.add('hidden');
+        header.classList.remove('hidden');
+        actionBtn.textContent = 'Проверить';
+        actionBtn.classList.remove('continue');
+        updateProgress(0);
+        loadQuestion();
+    }
+
+    function loadQuestion() {
+        const currentItem = quizData[currentIndex];
+        questionText.textContent = currentItem.event;
+        optionsContainer.innerHTML = '';
+        selectedOptionDiv = null;
+        actionBtn.disabled = true;
+        actionBtn.textContent = 'Проверить';
+        actionBtn.classList.remove('continue');
+
+        let wrongAnswers = allData
+            .map(d => d.date)
+            .filter(d => d !== currentItem.date);
+        wrongAnswers = shuffle(wrongAnswers).slice(0, 3);
+
+        const options = shuffle([currentItem.date, ...wrongAnswers]);
+
+        options.forEach(dateText => {
+            const div = document.createElement('div');
+            div.className = 'option';
+            div.textContent = dateText;
+            div.onclick = () => selectOption(div);
+            optionsContainer.appendChild(div);
+        });
+    }
+
+    function selectOption(div) {
+        if (actionBtn.textContent === 'Дальше') return; 
+        
+        document.querySelectorAll('.option').forEach(el => el.classList.remove('selected'));
+        div.classList.add('selected');
+        selectedOptionDiv = div;
+        actionBtn.disabled = false;
+    }
+
+    function updateProgress(value) {
+        progressBar.style.width = `${value}%`;
+    }
+
+    actionBtn.onclick = () => {
+        if (actionBtn.textContent === 'Дальше' || actionBtn.textContent === 'Пройти заново') {
+            currentIndex++;
+            if (currentIndex < totalQuestions) {
+                loadQuestion();
+            } else if (currentIndex === totalQuestions) {
+                showResults();
+            } else {
+                startGame();
+            }
+            return;
+        }
+
+        const currentItem = quizData[currentIndex];
+        const correctDate = currentItem.date;
+
+        document.querySelectorAll('.option').forEach(div => {
+            if (div.textContent === correctDate) {
+                div.classList.add('correct');
+            }
+            if (div.classList.contains('selected') && div.textContent !== correctDate) {
+                div.classList.add('wrong');
+            }
+        });
+
+        if (selectedOptionDiv && selectedOptionDiv.textContent === correctDate) {
+            score++;
+        }
+
+        updateProgress(((currentIndex + 1) / totalQuestions) * 100);
+        
+        actionBtn.textContent = 'Дальше';
+        actionBtn.classList.add('continue');
+    };
+
+    function showResults() {
+        quizScreen.classList.add('hidden');
+        header.classList.add('hidden');
+        resultScreen.classList.remove('hidden');
+        scoreText.textContent = `Твой результат: ${score} из ${totalQuestions}`;
+        actionBtn.textContent = 'Пройти заново';
+        actionBtn.classList.remove('continue');
+    }
+
+    startGame();
+</script>
+</body>
+</html>
