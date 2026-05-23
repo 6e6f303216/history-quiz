@@ -48,11 +48,22 @@
             line-height: 1.4;
             text-align: center;
         }
+        h3 {
+            font-size: 18px;
+            margin: 0 0 15px 0;
+            text-align: center;
+        }
         .options {
             display: flex;
             flex-direction: column;
             gap: 15px;
             flex-grow: 1;
+        }
+        .options-grid {
+            display: grid;
+            grid-template-columns: max-content max-content;
+            justify-content: center;
+            gap: 15px;
         }
         .option {
             border: 2px solid #e5e5e5;
@@ -65,6 +76,12 @@
             text-align: center;
             transition: all 0.1s ease;
             user-select: none;
+        }
+        .option.option-image {
+            padding: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         .option:active {
             border-bottom-width: 2px;
@@ -85,43 +102,6 @@
             background-color: #ffdfe0;
             color: #ea2b2b;
         }
-        .footer {
-            margin-top: 40px;
-            padding-top: 20px;
-            border-top: 2px solid #e5e5e5;
-        }
-        .btn {
-            width: 100%;
-            background-color: #58cc02;
-            color: white;
-            border: none;
-            border-bottom: 4px solid #58a700;
-            border-radius: 16px;
-            padding: 16px;
-            font-size: 18px;
-            font-weight: bold;
-            text-transform: uppercase;
-            cursor: pointer;
-            transition: all 0.1s ease;
-        }
-        .btn:active:disabled {
-            transform: none;
-            border-bottom-width: 0px;
-        }
-        .btn:active:enabled {
-            border-bottom-width: 0px;
-            transform: translateY(4px);
-        }
-        .btn:disabled {
-            background-color: #e5e5e5;
-            color: #afafaf;
-            border-bottom-color: #cecece;
-            cursor: default;
-        }
-        .btn.continue {
-            background-color: #1cb0f6;
-            border-bottom-color: #1899d6;
-        }
         .hidden {
             display: none !important;
         }
@@ -138,7 +118,25 @@
             color: #58cc02;
             margin-bottom: 30px;
         }
-        /* Стили для портретов */
+        .btn {
+            width: 100%;
+            background-color: #58cc02;
+            color: white;
+            border: 0;
+            border-bottom: 4px solid #58a700;
+            border-radius: 16px;
+            padding: 16px;
+            font-size: 18px;
+            font-weight: bold;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.1s ease;
+            margin-top: 20px;
+        }
+        .btn:active {
+            border-bottom-width: 0px;
+            transform: translateY(4px);
+        }
         .question-header {
             text-align: center;
             display: flex;
@@ -152,6 +150,13 @@
             object-fit: cover;
             border: 4px solid #e5e5e5;
             margin-bottom: 15px;
+        }
+        .portrait-option {
+            width: 140px;
+            height: 140px;
+            object-fit: cover;
+            border-radius: 10px;
+            display: block;
         }
         .person-years {
             font-size: 18px;
@@ -178,10 +183,7 @@
     <div id="result-screen" class="hidden">
         <h2>Урок завершён!</h2>
         <div class="score-text" id="score-text"></div>
-    </div>
-
-    <div class="footer">
-        <button class="btn" id="action-btn" disabled>Проверить</button>
+        <button class="btn" onclick="startGame()">Пройти заново</button>
     </div>
 </div>
 
@@ -230,8 +232,7 @@
         {"date": "1991", "event": "денонсация договора о создании СССР"},
         {"date": "1993", "event": "принятие конституции Российской Федерации"},
         
-        // Личности 
-{"name": "Иван III Васильевич Рюрикович", "years": "1462-1505", "image": "images/image1.png"},
+        {"name": "Иван III Васильевич Рюрикович", "years": "1462-1505", "image": "images/image1.png"},
         {"name": "Василий III Иванович Рюрикович", "years": "1505-1533", "image": "images/image2.png"},
         {"name": "Иван IV Васильевич Рюрикович", "years": "1533-1584", "image": "images/image3.png"},
         {"name": "Фёдор Иванович Рюрикович", "years": "1584-1598", "image": "images/image4.png"},
@@ -243,41 +244,40 @@
         {"name": "Фёдор III Алексеевич Романов", "years": "1676-1682", "image": "images/image10.png"},
         {"name": "Иван V Алексеевич Романов", "years": "1682-1696", "image": "images/image11.png"},
         {"name": "Пётр I Алексеевич Романов", "years": "1682-1725", "image": "images/image12.png"},
-        {"name": "Екатерина I Алексеевна Михайлова (настоящее имя – Марта Самуиловна Скавронская)", "years": "1725-1727", "image": "images/image13.png"},
+        {"name": "Екатерина I Алексеевна Михайлова", "years": "1725-1727", "image": "images/image13.png"},
         {"name": "Пётр II Алексеевич Романов", "years": "1727-1730", "image": "images/image14.png"},
         {"name": "Анна Иоанновна Романова", "years": "1730-1740", "image": "images/image15.png"},
         {"name": "Иван VI Антонович", "years": "1740-1741", "image": "images/image16.png"},
         {"name": "Елизавета Петровна Романова", "years": "1741-1761", "image": "images/image17.png"},
-        {"name": "Пётр III Фёдорович (настоящее имя – Карл Пётр Ульрих Гольштейн Готторпский)", "years": "1761-1762", "image": "images/image18.png"},
-        {"name": "Екатерина II Алексеевна Романова (настоящее имя – София Августа Фредерика Ангальт-Цербстская)", "years": "1762-1796", "image": "images/image19.png"},
+        {"name": "Пётр III Фёдорович", "years": "1761-1762", "image": "images/image18.png"},
+        {"name": "Екатерина II Алексеевна Романова", "years": "1762-1796", "image": "images/image19.png"},
         {"name": "Павел I Петрович Романов", "years": "1796-1801", "image": "images/image20.png"},
-        {"name": "Александр I Павлович Романов", "years": "1801-1825", "image": "images/image21.png"},
+        {"name": "Александр I Павлович Романов", "years": "1801-1825", "image": "images/image21.jpeg"},
         {"name": "Николай I Павлович Романов", "years": "1825-1855", "image": "images/image22.png"},
         {"name": "Александр II Николаевич Романов", "years": "1855-1881", "image": "images/image23.png"},
         {"name": "Александр III Александрович Романов", "years": "1881-1894", "image": "images/image24.png"},
         {"name": "Николай II Александрович Романов", "years": "1894-1917", "image": "images/image25.png"},
-        {"name": "Владимир Ильич Ленин (настоящая фамилия – Ульянов)", "years": "1917-1924", "image": "images/image26.png"},
-        {"name": "Иосиф Виссарионович Сталин (настоящая фамилия – Джугашвили)", "years": "1929-1953", "image": "images/image27.png"},
+        {"name": "Владимир Ильич Ленин", "years": "1917-1924", "image": "images/image26.png"},
+        {"name": "Иосиф Виссарионович Сталин", "years": "1929-1953", "image": "images/image27.png"},
         {"name": "Никита Сергеевич Хрущёв", "years": "1957-1964", "image": "images/image28.png"},
         {"name": "Леонид Ильич Брежнев", "years": "1964-1982", "image": "images/image29.png"},
         {"name": "Юрий Владимирович Андропов", "years": "1982-1984", "image": "images/image30.png"},
-        {"name": "Константин Устинович Черненко", "years": "1984-1985", "image": "images/image31.png"},
+        {"name": "Константин Устинович Черненко", "years": "1984-1985", "image": "images/image31.jpeg"},
         {"name": "Михаил Сергеевич Горбачёв", "years": "1985-1991", "image": "images/image32.png"},
         {"name": "Борис Николаевич Ельцин", "years": "1991-1999", "image": "images/image33.png"},
         {"name": "Путин Владимир Владимирович", "years": "2000-2008, 2012 – по сей день", "image": "images/image34.png"},
         {"name": "Дмитрий Анатольевич Медведев", "years": "2008-2012", "image": "images/image35.png"}
     ];
 
-    const totalQuestions = 5;
+    const totalQuestions = 7;
     let quizData = [];
     let currentIndex = 0;
     let score = 0;
-    let selectedOptionDiv = null;
     let currentCorrectAnswer = '';
+    let isProcessing = false;
 
     const questionHeader = document.getElementById('question-header');
     const optionsContainer = document.getElementById('options-container');
-    const actionBtn = document.getElementById('action-btn');
     const progressBar = document.getElementById('progress-bar');
     const quizScreen = document.getElementById('quiz-screen');
     const resultScreen = document.getElementById('result-screen');
@@ -292,11 +292,10 @@
         quizData = shuffle([...allData]).slice(0, totalQuestions);
         currentIndex = 0;
         score = 0;
+        isProcessing = false;
         quizScreen.classList.remove('hidden');
         resultScreen.classList.add('hidden');
         header.classList.remove('hidden');
-        actionBtn.textContent = 'Проверить';
-        actionBtn.classList.remove('continue');
         updateProgress(0);
         loadQuestion();
     }
@@ -304,12 +303,11 @@
     function loadQuestion() {
         const currentItem = quizData[currentIndex];
         optionsContainer.innerHTML = '';
-        selectedOptionDiv = null;
-        actionBtn.disabled = true;
-        actionBtn.textContent = 'Проверить';
-        actionBtn.classList.remove('continue');
+        optionsContainer.className = 'options';
+        isProcessing = false;
 
         let optionsList = [];
+        let isImageMode = false;
 
         if (currentItem.event) {
             questionHeader.innerHTML = `<h2>${currentItem.event}</h2>`;
@@ -321,81 +319,96 @@
             wrongAnswers = shuffle(wrongAnswers).slice(0, 3);
             optionsList = shuffle([currentCorrectAnswer, ...wrongAnswers]);
         } else {
-            questionHeader.innerHTML = `
-                <img src="${currentItem.image}" alt="Портрет" class="portrait">
-                <h2 style="margin-bottom: 5px;">Кто на портрете?</h2>
-                <div class="person-years">${currentItem.years}</div>
-            `;
-            currentCorrectAnswer = currentItem.name;
+            const isGuessPortrait = Math.random() > 0.5;
+            
+            if (isGuessPortrait) {
+                isImageMode = true;
+                optionsContainer.classList.add('options-grid');
+                questionHeader.innerHTML = `
+                    <h2 style="margin-bottom: 5px;">Где изображён</h2>
+                    <h3>${currentItem.name}?</h3>
+                    <div class="person-years">${currentItem.years}</div>
+                `;
+                currentCorrectAnswer = currentItem.image;
 
-            let wrongAnswers = allData
-                .filter(d => d.name && d.name !== currentItem.name)
-                .map(d => d.name);
-            wrongAnswers = shuffle(wrongAnswers).slice(0, 3);
-            optionsList = shuffle([currentCorrectAnswer, ...wrongAnswers]);
+                let wrongAnswers = allData
+                    .filter(d => d.name && d.image !== currentItem.image)
+                    .map(d => d.image);
+                wrongAnswers = shuffle(wrongAnswers).slice(0, 3);
+                optionsList = shuffle([currentCorrectAnswer, ...wrongAnswers]);
+            } else {
+                questionHeader.innerHTML = `
+                    <img src="${currentItem.image}" alt="Портрет" class="portrait">
+                    <h2 style="margin-bottom: 5px;">Кто на портрете?</h2>
+                    <div class="person-years">${currentItem.years}</div>
+                `;
+                currentCorrectAnswer = currentItem.name;
+
+                let wrongAnswers = allData
+                    .filter(d => d.name && d.name !== currentItem.name)
+                    .map(d => d.name);
+                wrongAnswers = shuffle(wrongAnswers).slice(0, 3);
+                optionsList = shuffle([currentCorrectAnswer, ...wrongAnswers]);
+            }
         }
 
-        optionsList.forEach(text => {
+        optionsList.forEach(value => {
             const div = document.createElement('div');
-            div.className = 'option';
-            div.textContent = text;
+            div.className = isImageMode ? 'option option-image' : 'option';
+            div.dataset.value = value;
+            
+            if (isImageMode) {
+                div.innerHTML = `<img src="${value}" class="portrait-option" alt="Вариант ответа">`;
+            } else {
+                div.textContent = value;
+            }
+            
             div.onclick = () => selectOption(div);
             optionsContainer.appendChild(div);
         });
     }
 
     function selectOption(div) {
-        if (actionBtn.textContent === 'Дальше') return; 
+        if (isProcessing) return; 
+        isProcessing = true;
         
-        document.querySelectorAll('.option').forEach(el => el.classList.remove('selected'));
         div.classList.add('selected');
-        selectedOptionDiv = div;
-        actionBtn.disabled = false;
+
+        document.querySelectorAll('.option').forEach(el => {
+            if (el.dataset.value === currentCorrectAnswer) {
+                el.classList.add('correct');
+            }
+            const isWrongSelected = el.classList.contains('selected') && el.dataset.value !== currentCorrectAnswer;
+            if (isWrongSelected) {
+                el.classList.add('wrong');
+            }
+        });
+
+        if (div.dataset.value === currentCorrectAnswer) {
+            score++;
+        }
+
+        updateProgress(((currentIndex + 1) / totalQuestions) * 100);
+        
+        setTimeout(() => {
+            currentIndex++;
+            if (currentIndex < totalQuestions) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        }, 1500);
     }
 
     function updateProgress(value) {
         progressBar.style.width = `${value}%`;
     }
 
-    actionBtn.onclick = () => {
-        if (actionBtn.textContent === 'Дальше' || actionBtn.textContent === 'Пройти заново') {
-            currentIndex++;
-            if (currentIndex < totalQuestions) {
-                loadQuestion();
-            } else if (currentIndex === totalQuestions) {
-                showResults();
-            } else {
-                startGame();
-            }
-            return;
-        }
-
-        document.querySelectorAll('.option').forEach(div => {
-            if (div.textContent === currentCorrectAnswer) {
-                div.classList.add('correct');
-            }
-            if (div.classList.contains('selected') && div.textContent !== currentCorrectAnswer) {
-                div.classList.add('wrong');
-            }
-        });
-
-        if (selectedOptionDiv && selectedOptionDiv.textContent === currentCorrectAnswer) {
-            score++;
-        }
-
-        updateProgress(((currentIndex + 1) / totalQuestions) * 100);
-        
-        actionBtn.textContent = 'Дальше';
-        actionBtn.classList.add('continue');
-    };
-
     function showResults() {
         quizScreen.classList.add('hidden');
         header.classList.add('hidden');
         resultScreen.classList.remove('hidden');
         scoreText.textContent = `Твой результат: ${score} из ${totalQuestions}`;
-        actionBtn.textContent = 'Пройти заново';
-        actionBtn.classList.remove('continue');
     }
 
     startGame();
