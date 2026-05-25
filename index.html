@@ -310,14 +310,27 @@
         let isImageMode = false;
 
         if (currentItem.event) {
-            questionHeader.innerHTML = `<h2>${currentItem.event}</h2>`;
-            currentCorrectAnswer = currentItem.date;
-            
-            let wrongAnswers = allData
-                .filter(d => d.event && d.date !== currentItem.date)
-                .map(d => d.date);
-            wrongAnswers = shuffle(wrongAnswers).slice(0, 3);
-            optionsList = shuffle([currentCorrectAnswer, ...wrongAnswers]);
+            const isGuessDate = Math.random() > 0.5;
+
+            if (isGuessDate) {
+                questionHeader.innerHTML = `<h2>${currentItem.event}</h2>`;
+                currentCorrectAnswer = currentItem.date;
+                
+                let wrongAnswers = allData
+                    .filter(d => d.event && d.date !== currentItem.date)
+                    .map(d => d.date);
+                wrongAnswers = shuffle(wrongAnswers).slice(0, 3);
+                optionsList = shuffle([currentCorrectAnswer, ...wrongAnswers]);
+            } else {
+                questionHeader.innerHTML = `<h2>${currentItem.date}</h2>`;
+                currentCorrectAnswer = currentItem.event;
+
+                let wrongAnswers = allData
+                    .filter(d => d.event && d.event !== currentItem.event)
+                    .map(d => d.event);
+                wrongAnswers = shuffle(wrongAnswers).slice(0, 3);
+                optionsList = shuffle([currentCorrectAnswer, ...wrongAnswers]);
+            }
         } else {
             const isGuessPortrait = Math.random() > 0.5;
             
