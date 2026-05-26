@@ -137,6 +137,14 @@
             border-bottom-width: 0px;
             transform: translateY(4px);
         }
+        .btn:disabled {
+            background-color: #e5e5e5;
+            border-color: #e5e5e5;
+            color: #afafaf;
+            cursor: default;
+            transform: none;
+            border-bottom-width: 4px;
+        }
         .question-header {
             text-align: center;
             display: flex;
@@ -164,6 +172,37 @@
             font-weight: bold;
             margin-bottom: 25px;
         }
+        #input-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+            margin-top: 20px;
+        }
+        #date-input {
+            width: 100%;
+            padding: 18px;
+            font-size: 20px;
+            font-weight: bold;
+            color: #3c3c3c;
+            border: 2px solid #e5e5e5;
+            border-radius: 16px;
+            box-sizing: border-box;
+            font-family: inherit;
+            text-align: center;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+        #date-input.correct-input {
+            border-color: #58cc02;
+            background-color: #d7ffb8;
+            color: #58a700;
+        }
+        #date-input.wrong-input {
+            border-color: #ea2b2b;
+            background-color: #ffdfe0;
+            color: #ea2b2b;
+        }
     </style>
 </head>
 <body>
@@ -178,6 +217,11 @@
     <div id="quiz-screen">
         <div class="question-header" id="question-header"></div>
         <div class="options" id="options-container"></div>
+        
+        <div id="input-container" class="hidden">
+            <input type="text" id="date-input" placeholder="Введи год..." autocomplete="off">
+            <button id="submit-btn" class="btn" onclick="checkInput()">Проверить</button>
+        </div>
     </div>
 
     <div id="result-screen" class="hidden">
@@ -278,6 +322,9 @@
 
     const questionHeader = document.getElementById('question-header');
     const optionsContainer = document.getElementById('options-container');
+    const inputContainer = document.getElementById('input-container');
+    const dateInput = document.getElementById('date-input');
+    const submitBtn = document.getElementById('submit-btn');
     const progressBar = document.getElementById('progress-bar');
     const quizScreen = document.getElementById('quiz-screen');
     const resultScreen = document.getElementById('result-screen');
@@ -304,15 +351,23 @@
         const currentItem = quizData[currentIndex];
         optionsContainer.innerHTML = '';
         optionsContainer.className = 'options';
+        optionsContainer.classList.remove('hidden');
+        inputContainer.classList.add('hidden');
+        
+        dateInput.value = '';
+        dateInput.className = '';
+        dateInput.disabled = false;
+        submitBtn.disabled = false;
         isProcessing = false;
 
         let optionsList = [];
         let isImageMode = false;
 
         if (currentItem.event) {
-            const isGuessDate = Math.random() > 0.5;
+            const mode = Math.floor(Math.random() * 3);
 
-            if (isGuessDate) {
+            if (mode === 0) {
+                // Выбор даты из вариантов
                 questionHeader.innerHTML = `<h2>${currentItem.event}</h2>`;
                 currentCorrectAnswer = currentItem.date;
                 
@@ -321,7 +376,9 @@
                     .map(d => d.date);
                 wrongAnswers = shuffle(wrongAnswers).slice(0, 3);
                 optionsList = shuffle([currentCorrectAnswer, ...wrongAnswers]);
-            } else {
+
+            } else if (mode === 1) {
+                // Выбор события из вариантов
                 questionHeader.innerHTML = `<h2>${currentItem.date}</h2>`;
                 currentCorrectAnswer = currentItem.event;
 
@@ -330,6 +387,15 @@
                     .map(d => d.event);
                 wrongAnswers = shuffle(wrongAnswers).slice(0, 3);
                 optionsList = shuffle([currentCorrectAnswer, ...wrongAnswers]);
+
+            } else {
+                // Ввод даты вручную
+                optionsContainer.classList.add('hidden');
+                inputContainer.classList.remove('hidden');
+                questionHeader.innerHTML = `<h2>${currentItem.event}</h2>`;
+                currentCorrectAnswer = currentItem.date;
+                setTimeout(() => dateInput.focus(), 50);
+                return; // Выходим, так как варианты создавать здесь нужно
             }
         } else {
             const isGuessPortrait = Math.random() > 0.5;
@@ -401,6 +467,36 @@
             score++;
         }
 
+        proceedToNext();
+    }
+
+    function checkInput() {
+        if (isProcessing) return;
+        const userAnswer = dateInput.value.trim();
+        if (userAnswer === '') return;
+
+        isProcessing = true;
+        dateInput.disabled = true;
+        submitBtn.disabled = true;
+
+        if (userAnswer === currentCorrectAnswer) {
+            score++;
+            dateInput.classList.add('correct-input');
+        } else {
+            dateInput.classList.add('wrong-input');
+            dateInput.value = `${userAnswer} (Верно: ${currentCorrectAnswer})`;
+        }
+
+        proceedToNext();
+    }
+
+    dateInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            checkInput();
+        }
+    });
+
+    function proceedToNext() {
         updateProgress(((currentIndex + 1) / totalQuestions) * 100);
         
         setTimeout(() => {
